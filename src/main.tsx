@@ -2,12 +2,21 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ErrorPage from "./error-page.tsx";
+import ApplicationForm from "./pages/ApplicationForm.tsx";
 import "./index.css";
 
 const router = createBrowserRouter([
   {
-    path: "/application-form",
+    path: "/",
     element: <App />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "application-form",
+        element: <ApplicationForm />,
+      },
+    ],
   },
 ]);
 

@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const navigate = useNavigate();
   return (
-    <div className=' ml-0 lg:ml-[6em]  h-[100px] mt-[6em]'>
-      <nav className='w-[97vw] flex items-center justify-start shadow-custom2'>
+    <div className=' ml-0 lg:ml-[6em] z-10 relative  h-[100px] mt-[6em]'>
+      <nav className='w-[100vw] flex items-center px-[2.5em] justify-start shadow-custom2'>
         {routes.map(({ name, path }: { name: string; path: string }) => (
           <div
             onClick={() => navigate(path)}
@@ -22,7 +22,7 @@ const Navbar = () => {
             ></div>
 
             <div className='absolute inset-0 flex items-center justify-center'>
-              <p className=' text-xl font-semibold'>{name}</p>
+              <p className=' text-[20px] font-Inter font-medium'>{name}</p>
             </div>
           </div>
         ))}

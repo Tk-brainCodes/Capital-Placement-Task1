@@ -1,0 +1,29 @@
+import { Hamburger, Home, Category } from "../../assets/icons";
+
+function Sidenav() {
+  return (
+    <div className='w-[8vw] h-[100vh] flex flex-col items-center justify-start z-40 fixed bg-white shadow-custom'>
+      <div className='flex flex-col mt-[2em]'>
+        <img
+          src={Hamburger}
+          alt='hamburger icon'
+          className='cursor-pointer w-[22px] h-[18.518px]'
+        />
+      </div>
+      <div className='flex flex-col gap-[40px] mt-[6em]'>
+        <img
+          src={Home}
+          alt='home icon'
+          className='cursor-pointer w-[36px] h-[35.087px]'
+        />
+        <img
+          src={Category}
+          alt='category icon'
+          className='cursor-pointer w-[33px] h-[32.163px]'
+        />
+      </div>
+    </div>
+  );
+}
+
+export default Sidenav;

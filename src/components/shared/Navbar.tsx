@@ -12,6 +12,7 @@ const Navbar = () => {
             className={`relative h-[100px]  ${
               path === "application-form" ? "bg-[#00635B] text-white" : ""
             } w-[282.456px]  cursor-pointer`}
+            key={name}
           >
             <div
               className={`absolute top-1/2 -right-1 transform -translate-y-1/2 translate-x-1/2 w-0 h-0  ${

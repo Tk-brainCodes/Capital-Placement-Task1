@@ -14,8 +14,8 @@ export default {
         Poppins: 'Poppins'
       },
       borderRadius: {
-        radius1: '20px 20px 0px 0px'
-      }
+        radius1: '20px 20px 0px 0px',
+      },
     }
   },
   plugins: []

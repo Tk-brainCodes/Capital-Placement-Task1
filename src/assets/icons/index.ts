@@ -6,3 +6,4 @@ export { default as Delete } from "./delete.svg";
 export { default as Plus } from "./plus.svg";
 export { default as DeleteRed } from "./deleteRed.svg";
 export { default as Options } from "./option.svg";
+export { default as EditPencil } from "./editPencil.svg";

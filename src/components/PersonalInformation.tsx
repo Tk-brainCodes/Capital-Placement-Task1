@@ -5,23 +5,7 @@ import QuestionForm from "./shared/QuestionForm";
 import { Switch } from "antd";
 import { Plus } from "../assets/icons";
 import axios from "axios";
-
-interface FieldState {
-  internalUse: boolean;
-  show: boolean;
-}
-
-interface FormState {
-  firstName: FieldState;
-  lastName: FieldState;
-  emailId: FieldState;
-  phoneNumber: FieldState;
-  nationality: FieldState;
-  currentResidence: FieldState;
-  idNumber: FieldState;
-  dateOfBirth: FieldState;
-  gender: FieldState;
-}
+import { QuestionType, FormState, FieldState } from "../types/form-types";
 
 const initialFormData: FormState = {
   firstName: { internalUse: false, show: true },
@@ -50,6 +34,26 @@ const fieldLabelMap: Record<keyof FormState, string> = {
 const PersonalInformation = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [showQuestions, setShowQuestions] = useState<boolean>(false);
+  const [savedQuestions, setSavedQuestions] = useState<QuestionType[]>([]);
+  const [onOpenEdit, setOnOpenEdit] = useState<boolean>(false);
+
+  const apiUrl =
+    "http://127.0.0.1:4010/api/623.354286974459/programs/esse/application-form";
+
+  const onSaveQuestion = (question: QuestionType) => {
+    setSavedQuestions([...savedQuestions, question]);
+  };
+
+  const onUpdateQuestion = (updatedQuestion: QuestionType) => {
+    const updatedQuestions = [...savedQuestions];
+    const index = updatedQuestions.findIndex(
+      (question) => question.id === updatedQuestion.id
+    );
+    if (index !== -1) {
+      updatedQuestions[index] = updatedQuestion;
+      setSavedQuestions(updatedQuestions);
+    }
+  };
 
   const handleChange =
     (field: keyof FormState, property: keyof FieldState) =>
@@ -60,27 +64,46 @@ const PersonalInformation = () => {
       setFormData({ ...formData, [field]: updatedFieldState });
 
       const putData = {
-        id: "497f6eca-6276-4993-bfeb-53cbbbba6f08",
         data: {
+          id: "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+          type: "applicationForm",
           attributes: {
-            [field]: updatedFieldState,
+            personalInformation: {
+              ...formData,
+            },
+            personalQuestions: [
+              savedQuestions?.map((question) => ({
+                id: question.id,
+                type: question.type,
+                question: question.question,
+                choices: question.choices,
+                maxChoice: question.maxChoice || 0,
+                disqualify: false,
+                other: false,
+              })),
+            ],
           },
         },
       };
 
       axios
-        .post(
-          `http://127.0.0.1:4010/api/169.56811297064885/programs/qui/application-form`,
-          putData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
+        .put(apiUrl, putData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          if (
+            response.data &&
+            response.data.data &&
+            response.data.data.attributes
+          ) {
+            const updatedData =
+              response.data.data.attributes.personalInformation;
+            setFormData(updatedData);
+          } else {
+            console.error("Invalid response format:", response);
           }
-        )
-        .then((response) => response.data)
-        .then((data) => {
-          console.log("Data updated:", data);
         })
         .catch((error) => {
           console.error("Error updating data:", error);
@@ -90,40 +113,41 @@ const PersonalInformation = () => {
   const getUpdatedFormData = async () => {
     await axios
       .get(
-        "http://127.0.0.1:4010/api/616.4532368520852/programs/dolor/application-form"
+        "http://127.0.0.1:4010/api/671.7742181354413/programs/expedita/application-form"
       )
       .then((response) => response.data)
       .then((result) => {
-        setFormData(
-          result.data.attributes.personalInformation.include(
-            !result.data.attributes.personalQuestions
-          )
-        );
+        setFormData(result.data.attributes.personalInformation);
       })
       .catch((error) => {
         console.error("Error fetching initial data:", error);
       });
   };
 
-  const handleShowQuestions = (): void => {
-    setShowQuestions(!showQuestions);
+  console.log("form data update:", formData);
+
+  const handleShowQuestions = () => {
+    setShowQuestions(true);
+    setOnOpenEdit(false);
   };
 
   useEffect(() => {
     getUpdatedFormData();
   }, []);
 
+  console.log("UPDATED FORM DATA", formData);
+
   return (
-    <div className='w-full mt-[4em] lg:w-[595px] flex flex-col items-start h-auto shadow-form rounded-[20px]'>
+    <div className='w-[595px] mt-[4em] flex flex-col items-start h-auto shadow-form rounded-[20px]'>
       <div className='w-full bg-[#D0F7FA] px-[1em] text-[25px] font-semibold font-Poppins h-[77.437px] rounded-radius1 flex flex-col items-start justify-center'>
         Personal Information
       </div>
 
-      <div className='px-[1em] py-3 flex flex-col items-center justify-center'>
+      <div className='px-[1em] py-3 flex flex-col items-start justify-start'>
         <form>
           {Object.keys(formData).map((field) => (
             <div
-              className='flex border-b-2 border-grey-300 items-center justify-between w-[517px] px-4 py-5'
+              className='w-[555px] flex border-b-2 border-grey-300 items-center justify-between  px-4 py-5'
               key={field}
             >
               <label className='font-semibold text-black text-[20px] font-Poppins'>
@@ -139,6 +163,7 @@ const PersonalInformation = () => {
                       field as keyof FormState,
                       "internalUse"
                     )}
+                    className='w-[18px] h-[18px] bg-white rounded border border-slate-300'
                   />
                   <span>Internal</span>
                 </span>
@@ -157,14 +182,20 @@ const PersonalInformation = () => {
           ))}
         </form>
 
-        {/*Question Form*/}
         <div className='px-[1em] py-[1em]'>
           <QuestionForm
             showQuestions={showQuestions}
             handleShowQuestions={handleShowQuestions}
+            savedQuestions={savedQuestions}
+            onSaveQuestion={onSaveQuestion}
+            onUpdateQuestion={onUpdateQuestion}
+            onOpenEdit={onOpenEdit}
+            setOnOpenEdit={setOnOpenEdit}
+            setShowQuestions={setShowQuestions}
           />
         </div>
       </div>
+
       <span
         onClick={handleShowQuestions}
         className='flex relative mb-[3em] px-[1.5em] font-semibold font-Poppins -leading-[0.09px] text-[15px] cursor-pointer hover:text-gray-600 transition ease-in-out items-center justify-between gap-3'

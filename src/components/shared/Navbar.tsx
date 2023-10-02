@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const navigate = useNavigate();
   return (
-    <div className=' ml-0 lg:ml-[6em] z-10 relative  h-[100px] mt-[6em]'>
-      <nav className='w-[100vw] flex items-center px-[2.5em] justify-start shadow-custom2'>
+    <div className=' ml-0 lg:ml-[6em] z-10 relative max-md:h-auto max-sm:h-auto  lg:h-[100px] mt-[6em]'>
+      <nav className='max-sm:w-full  lg:w-[100vw] max-sm:flex-col max-md:flex-col lg:flex lg:items-center lg:px-[2.5em] justify-start shadow-custom2'>
         {routes.map(({ name, path }: { name: string; path: string }) => (
           <div
             onClick={() => navigate(path)}
             className={`relative h-[100px]  ${
               path === "application-form" ? "bg-[#00635B] text-white" : ""
-            } w-[282.456px]  cursor-pointer`}
+            } lg:w-[282.456px] max-sm:w-full max-md:w-full transition ease-in-out cursor-pointer hover:bg-[#00635B] hover:text-white`}
             key={name}
           >
             <div

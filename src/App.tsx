@@ -1,6 +1,6 @@
-import { Outlet } from "react-router-dom";
 import Sidenav from "./components/shared/Sidenav";
 import Navbar from "./components/shared/Navbar";
+import ApplicationForm from "./pages/ApplicationForm";
 import "./App.css";
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
         <Sidenav />
         <Navbar />
       </main>
-      <Outlet />
+      <ApplicationForm />
     </>
   );
 }
